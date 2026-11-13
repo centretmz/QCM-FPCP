@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QCM — Finance publique & Comptabilité publique</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ef;--card:#fff;--ink:#1d2430;--muted:#5d6675;--line:#e3dfd6;
+  --brand:#0f5c4d;--brand-soft:#e3f0ec;--accent:#b4842b;
+  --ok:#1f7a4d;--ok-soft:#e5f4ec;--ko:#b3392f;--ko-soft:#fbeae8;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#14171c;--card:#1d2128;--ink:#e9ecf1;--muted:#a1a9b6;--line:#2e343e;
+  --brand:#5cc3a8;--brand-soft:#1d3530;--accent:#e0b35a;
+  --ok:#5fcf93;--ok-soft:#183126;--ko:#f08277;--ko-soft:#3a1e1c;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:28px 18px 80px}
+header h1{font-family:"Source Serif 4",Georgia,serif;font-size:clamp(26px,4.5vw,36px);line-height:1.15;margin:0 0 6px}
+header p{margin:0;color:var(--muted)}
+.kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 12px;margin:18px 0 8px;border-bottom:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tabs button,.tools button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 13px;border-radius:999px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+@media (prefers-color-scheme:dark){.tabs button[aria-pressed=true]{color:#0d1a17}}
+.tools{margin-left:auto}
+.tools button:hover,.tabs button:hover{border-color:var(--brand)}
+.score{display:flex;gap:14px;align-items:center;margin-top:12px;font-size:14px;color:var(--muted)}
+.score b{color:var(--ink);font-variant-numeric:tabular-nums}
+.meter{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden;display:flex}
+.meter i{display:block;height:100%}
+.meter .g{background:var(--ok)}.meter .r{background:var(--ko)}
+h2.sec{font-family:"Source Serif 4",Georgia,serif;font-size:22px;margin:30px 0 4px}
+.sec-sub{color:var(--muted);font-size:14px;margin:0 0 10px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;margin:14px 0}
+.q .meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;gap:10px}
+.q .meta .tag{color:var(--brand);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.q h3{font-size:16.5px;font-weight:600;margin:0 0 12px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;font:inherit;font-size:15px;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;width:100%}
+.opt:hover:not([disabled]){border-color:var(--brand);background:var(--brand-soft)}
+.opt .l{flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--muted)}
+.opt[disabled]{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ok .l{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.ko{border-color:var(--ko);background:var(--ko-soft)}
+.opt.ko .l{background:var(--ko);border-color:var(--ko);color:#fff}
+.exp{display:none;margin-top:12px;padding:10px 12px;border-left:3px solid var(--brand);background:var(--brand-soft);border-radius:0 8px 8px 0;font-size:14.5px}
+.q.done .exp{display:block}
+.exp b{color:var(--brand)}
+.end{margin-top:30px;text-align:center;color:var(--muted);font-size:14px}
+.result{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:22px;text-align:center}
+.result.show{display:block}
+.result .big{font-family:"Source Serif 4",Georgia,serif;font-size:40px;font-weight:700;color:var(--brand)}
+
+.start{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:22px}
+.start h2{font-family:"Source Serif 4",Georgia,serif;margin:0 0 10px;font-size:22px}
+.start ul{margin:0 0 16px;padding-left:20px;color:var(--muted)}
+.field{display:grid;gap:6px;margin:14px 0}
+.field label{font-weight:600;font-size:14px}
+.field input{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choices label{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:500}
+.choices input{accent-color:var(--brand)}
+.primary{font:inherit;font-weight:600;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:12px 20px;cursor:pointer;font-size:15.5px}
+@media (prefers-color-scheme:dark){.primary{color:#0d1a17}}
+.primary:hover{filter:brightness(1.08)}
+.ghost{font:inherit;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 18px;cursor:pointer}
+.opt.sel{border-color:var(--brand);background:var(--brand-soft)}
+.opt.sel .l{background:var(--brand);border-color:var(--brand);color:#fff}
+.q.missing{border-color:var(--accent)}
+.q .verdict{font-weight:600}
+.q .verdict.okv{color:var(--ok)}.q .verdict.kov{color:var(--ko)}
+.submit{margin:26px 0 0;text-align:center}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;place-items:center;z-index:20;padding:16px}
+.modal.show{display:grid}
+.modal .box{background:var(--card);border-radius:14px;padding:22px;max-width:420px;width:100%;border:1px solid var(--line)}
+.modal h3{margin:0 0 8px;font-family:"Source Serif 4",Georgia,serif;font-size:20px}
+.modal .row{justify-content:flex-end;margin-top:16px}
+.result .who{color:var(--muted);margin-bottom:4px}
+.result .stats{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin:12px 0 4px;font-size:14px;color:var(--muted)}
+.result .stats b{display:block;font-size:20px;color:var(--ink)}
+.hidden{display:none!important}
+.timer{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">Préparation au concours · Techniciens 3<sup>e</sup> grade</div>
+  <h1>QCM — Finance publique &amp; Comptabilité publique</h1>
+  <p>Épreuve d'entraînement établie à partir des supports de cours (LOF n° 130-13 et décret royal n° 330-66 portant RGCP).</p>
+</header>
+
+<section class="start" id="start">
+  <h2>Consignes</h2>
+  <ul>
+    <li>Une seule bonne réponse par question.</li>
+    <li>Vous pouvez modifier vos réponses tant que vous n'avez pas validé.</li>
+    <li>La note sur 20 et le corrigé détaillé s'affichent à la fin, après validation.</li>
+  </ul>
+  <div class="field">
+    <label for="name">Nom et prénom</label>
+    <input id="name" autocomplete="name" placeholder="Ex. : Amina El Idrissi">
+  </div>
+  <div class="field">
+    <label>Épreuve</label>
+    <div class="choices">
+      <label><input type="radio" name="mod" value="all" checked> Les deux modules (<span data-c="all"></span> questions)</label>
+      <label><input type="radio" name="mod" value="FP"> Finance publique (<span data-c="FP"></span>)</label>
+      <label><input type="radio" name="mod" value="CP"> Comptabilité publique (<span data-c="CP"></span>)</label>
+    </div>
+  </div>
+  <div class="field">
+    <div class="choices"><label><input type="checkbox" id="mix" checked> Mélanger l'ordre des questions</label></div>
+  </div>
+  <button class="primary" id="go">Commencer l'épreuve</button>
+</section>
+
+<div class="bar hidden" id="bar">
+  <div class="score">
+    <span>Répondu <b id="sAns">0</b>/<b id="sTot">0</b></span>
+    <div class="meter"><i class="g" id="mG"></i><i class="r" id="mR"></i></div>
+    <span>Temps <b class="timer" id="time">00:00</b></span>
+    <button class="primary" id="submitTop" style="padding:8px 14px;font-size:14px">Valider</button>
+  </div>
+</div>
+
+<div class="result" id="result">
+  <div class="who" id="rWho"></div>
+  <div class="big" id="rBig"></div>
+  <div id="rTxt"></div>
+  <div class="stats" id="rStats"></div>
+  <div class="row" style="justify-content:center;margin-top:14px;gap:10px">
+    <button class="ghost" id="onlyErr">Voir seulement mes erreurs</button>
+    <button class="primary" id="again">Repasser l'épreuve</button>
+  </div>
+</div>
+
+<main id="list"></main>
+<div class="submit hidden" id="submitBox"><button class="primary" id="submit">Valider mes réponses et voir le corrigé</button></div>
+<p class="end">Supports : « La finance publique » et « La comptabilité publique » — Houssam Soufi.</p>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <h3>Valider l'épreuve ?</h3>
+    <p id="mTxt"></p>
+    <div class="row"><button class="ghost" id="mNo">Continuer</button><button class="primary" id="mYes">Valider</button></div>
+  </div>
+</div>
+
+<script>
+// [module, question, options, index bonne réponse, explication, diapo]
+const Q = [
+// ---------- FINANCE PUBLIQUE ----------
+["FP","Quel article de la Constitution de 2011 consacre le principe de justice fiscale (chacun contribue aux charges publiques selon ses facultés) ?",["Article 39","Article 75","Article 77","Article 147"],0,"L'article 39 consacre la justice fiscale ; l'article 75 le pouvoir financier du Parlement ; l'article 77 limite l'initiative parlementaire ; l'article 147 constitutionnalise le contrôle de la Cour des comptes.",4],
+["FP","Selon l'article 75 de la Constitution, le projet de loi de finances est déposé par priorité devant :",["La Chambre des Conseillers","La Chambre des Représentants","Le Conseil des Ministres","La Cour des comptes"],1,"Le Parlement vote la loi de finances, déposée par priorité devant la Chambre des Représentants, dans les conditions prévues par une loi organique.",5],
+["FP","Quel article de la Constitution pose des limites au droit d'initiative parlementaire lors de la discussion de la loi de finances ?",["Article 39","Article 75","Article 77","Article 147"],2,"C'est l'article 77.",4],
+["FP","La loi organique relative aux lois de finances (LOF) est souvent qualifiée de :",["Code budgétaire","Constitution financière","Charte de la dépense publique","Règlement général de comptabilité"],1,"La LOF a une valeur quasi-constitutionnelle : on parle de « constitution financière ».",6],
+["FP","Quelle est la loi organique des finances actuellement en vigueur au Maroc ?",["Loi organique n° 7.98","Loi organique n° 14.00","Loi organique n° 130.13","Dahir n° 1.72"],2,"La réforme de juin 2015 a institué la loi organique n° 130.13, qui a succédé à la loi 7.98 (1998) modifiée par la loi 14.00 (2000).",7],
+["FP","En quelle année a été adoptée la première loi organique des finances au Maroc ?",["1958","1963","1970","1998"],1,"Dahir n° 1.63.326 du 9 novembre 1963 : première loi organique des finances. Six textes se sont succédé de 1963 à 2015.",7],
+["FP","Le décret n° 2-15-426 du 15 juillet 2015 est relatif :",["Aux marchés publics","Au contrôle des dépenses de l'État","À l'élaboration et à l'exécution des lois de finances","Au recouvrement des créances publiques"],2,"Ce décret met en œuvre la LOF 130.13 et ses principes de performance et de transparence.",8],
+["FP","La LOF 130.13 a introduit une programmation budgétaire :",["Annuelle fixe","Biennale","Triennale glissante et actualisée","Quinquennale"],2,"La programmation triennale glissante et actualisée vise plus de visibilité et de souplesse.",12],
+["FP","La nouvelle nomenclature budgétaire prévue par la LOF s'articule autour de :",["Article – Paragraphe – Ligne","Programme – Région – Projet","Chapitre – Article – Rubrique","Mission – Action – Ligne"],1,"L'ancienne nomenclature était Article – Paragraphe – Ligne ; la LOF a instauré Programme – Région – Projet.",13],
+["FP","Combien d'objectifs au maximum peut comporter un programme budgétaire ?",["2","3","5","Aucune limite"],1,"Les objectifs sont en nombre limité : au plus 3 par programme, mesurables par des indicateurs chiffrés.",14],
+["FP","Quels sont les trois types d'indicateurs de performance ?",["Efficacité, efficience, qualité de service","Recettes, dépenses, solde","Coût, délai, volume","Légalité, régularité, sincérité"],0,"Trois types : efficacité, efficience et qualité de service, à raison de 2 à 3 indicateurs par objectif.",14],
+["FP","Le rapport annuel de performance est présenté au Parlement à l'occasion de l'examen :",["Du projet de loi de finances de l'année","Du projet de loi de finances rectificative","Du projet de loi de règlement","De la circulaire du Chef du Gouvernement"],2,"Les rapports ministériels de performance sont consolidés dans le rapport annuel de performance, présenté lors de l'examen du projet de loi de règlement.",12],
+["FP","Selon l'article 63 de la LOF, les crédits de paiement d'investissement peuvent être reportés dans la limite de :",["10 %","20 %","30 %","50 %"],2,"Plafond de 30 % des crédits de paiement ouverts au titre du budget d'investissement, par département ministériel ou institution.",16],
+["FP","Quel principe budgétaire a été consacré par la LOF 130.13 dans le cadre de la transparence ?",["Le principe de la sincérité budgétaire","Le principe de l'affectation des recettes","Le principe de la compensation","Le principe de la pluriannualité des crédits de fonctionnement"],0,"L'axe 2 de la réforme a adopté le principe de sincérité budgétaire et le caractère limitatif des crédits, y compris les dépenses de personnel.",15],
+["FP","Selon l'article 3 de la LOF, l'année budgétaire :",["Commence le 1er juillet et se termine le 30 juin","Commence le 1er janvier et se termine le 31 décembre","Commence à la date de publication de la loi de finances","Est fixée chaque année par décret"],1,"L'année civile constitue le cadre juridique de l'année budgétaire : du 1er janvier au 31 décembre.",21],
+["FP","La règle selon laquelle les opérations comptables se prolongent quelques mois après la fin de l'année budgétaire s'appelle :",["La règle de la gestion","La règle de l'exercice","La règle du douzième provisoire","La règle de la spécialité"],1,"La règle de l'exercice donne une image plus précise de la performance réelle d'une année budgétaire.",22],
+["FP","« Le budget est présenté dans un document unique retraçant l'ensemble des recettes et des dépenses de l'État. » Il s'agit du principe de :",["L'annualité","L'unité","L'universalité","La spécialité"],1,"Principe de l'unité : un seul document pour une vision globale des finances publiques.",23],
+["FP","Le principe « ni compensation, ni affectation » correspond au principe de :",["L'unité","L'universalité","La spécialité","La sincérité"],1,"L'universalité exige que recettes et dépenses soient présentées séparément (non-compensation) et que l'ensemble des recettes couvre l'ensemble des dépenses (non-affectation).",25],
+["FP","Le principe selon lequel les crédits sont affectés à la couverture de dépenses déterminées (« pas de chèque en blanc ») est le principe de :",["L'annualité","L'universalité","La spécialité des crédits","L'unité"],2,"La spécialité naît de la méfiance du Parlement envers une autorisation absolue donnée au gouvernement.",26],
+["FP","Qui certifie la régularité et la sincérité des comptes de l'État ?",["Le ministère de l'Économie et des Finances","La Trésorerie Générale du Royaume","La Cour des comptes","Bank Al-Maghrib"],2,"Au titre de la sincérité comptable, la Cour des comptes certifie la régularité et la sincérité des comptes de l'État.",27],
+["FP","Quel article de la LOF définit la loi de finances ?",["Article 1","Article 3","Article 36","Article 64"],0,"Art. 1 : la LF détermine la nature, le montant et l'affectation des ressources et des charges de l'État, ainsi que l'équilibre qui en résulte.",29],
+["FP","La loi de finances, en tant qu'acte d'autorisation, relève de la dimension :",["Financière","Juridique","Comptable","Économique"],1,"Acte de prévision = dimension financière ; acte d'autorisation (autorisation parlementaire obligatoire) = dimension juridique.",30],
+["FP","Lequel des textes suivants n'est PAS un type de loi de finances au sens de la LOF ?",["La loi de finances de l'année","La loi de finances rectificative","La loi de règlement","La loi de programmation des marchés"],3,"Trois types : loi de finances de l'année (art. 3 et 36), loi de finances rectificative (art. 4) et loi de règlement (art. 64 et 65).",31],
+["FP","Lors du vote du PLF, quelle partie est votée en premier ?",["La deuxième partie","La première partie","Les deux simultanément","L'ordre est libre"],1,"En aucun cas la deuxième partie n'est votée avant la première. Le rejet de la première partie par une chambre vaut rejet du PLF dans son ensemble.",34],
+["FP","La deuxième partie de la loi de finances arrête les dépenses des SEGMA :",["Par chapitre","Par service","Par compte","Par programme"],1,"Dépenses du budget général par chapitre, des SEGMA par service et des comptes spéciaux du Trésor par compte.",33],
+["FP","Dans quel délai maximal le Parlement vote-t-il une loi de finances rectificative ?",["8 jours","15 jours","30 jours","58 jours"],1,"15 jours : 8 jours pour la Chambre des Représentants, 4 jours pour la Chambre des Conseillers, puis 3 jours pour l'adoption définitive par la Chambre des Représentants.",37],
+["FP","Le projet de loi de règlement doit être déposé au bureau de la Chambre des Représentants au plus tard :",["Le 20 octobre de l'année suivante","À la fin du premier trimestre de la deuxième année qui suit l'exécution de la loi de finances","Six mois après la clôture de l'année budgétaire","En même temps que le PLF de l'année"],1,"Article 65 de la LOF 130.13.",38],
+["FP","Le budget de l'État se compose :",["Du budget général et des budgets des collectivités territoriales","Du budget général, des budgets des SEGMA et des comptes spéciaux du Trésor","Du budget général et du budget de la sécurité sociale","Du budget de fonctionnement et du budget d'investissement uniquement"],1,"Budget de l'État = Budget général + budgets des SEGMA + budgets des CST.",41],
+["FP","Les dépenses du budget général comprennent :",["Fonctionnement, investissement et dette publique","Personnel, matériel et SEGMA","Investissement et comptes spéciaux du Trésor","Fonctionnement et charges communes uniquement"],0,"Trois catégories : dépenses de fonctionnement, dépenses d'investissement et dépenses de la dette publique.",43],
+["FP","Avant quelle date la circulaire du Chef du Gouvernement relative aux programmations budgétaires triennales est-elle diffusée aux ministères ?",["15 mars N-1","15 mai N-1","15 juillet N-1","20 octobre N-1"],0,"Phase de programmation : circulaire avant le 15 mars N-1, examen par les commissions avant le 15 mai, exposé au Conseil de Gouvernement avant le 15 juillet.",46],
+["FP","Le PLF est déposé au bureau de la Chambre des Représentants au plus tard le :",["1er octobre N-1","20 octobre N-1","15 novembre N-1","31 décembre N-1"],1,"Dépôt du PLF au plus tard le 20 octobre de l'année N-1.",48],
+["FP","De combien de jours au total dispose le Parlement pour examiner et voter le PLF ?",["30 jours","45 jours","58 jours","70 jours"],2,"30 jours (Chambre des Représentants) + 22 jours (Chambre des Conseillers) + 6 jours (adoption définitive) = 58 jours.",48],
+["FP","La lettre d'orientation du Chef du Gouvernement concernant la préparation du PLF est diffusée en :",["Mars N-1","Juillet N-1","Octobre N-1","Décembre N-1"],1,"Phase de consultation (juillet N-1) : consultation du Parlement et diffusion de la lettre d'orientation.",47],
+
+// ---------- COMPTABILITÉ PUBLIQUE ----------
+["CP","Quel texte porte règlement général de comptabilité publique (RGCP) ?",["Dahir du 9 juin 1917","Décret royal n° 330-66 du 21 avril 1967","Décret n° 2-07-1235","Loi organique n° 130-13"],1,"Décret royal n° 330-66 du 21 avril 1967 portant RGCP.",1],
+["CP","Parmi les trois piliers du cadre des finances publiques, lequel fixe le mode d'exécution du budget ?",["Le budget","Les marchés publics","La comptabilité publique","La loi de règlement"],2,"Le budget fixe la nature et le volume des ressources et dépenses ; les marchés publics concernent l'exécution du budget ; la comptabilité publique en fixe le mode d'exécution.",7],
+["CP","Selon l'article 1 du RGCP, la comptabilité publique s'applique aux opérations financières et comptables :",["De l'État uniquement","De l'État, des collectivités locales, de leurs établissements et de leurs groupements","Des entreprises publiques et privées","Des seules collectivités territoriales"],1,"Elle détermine aussi les obligations et responsabilités des agents qui en sont chargés.",9],
+["CP","Quelle composante de la comptabilité publique n'est pas encore tenue à ce jour ?",["La comptabilité générale","La comptabilité administrative","La comptabilité analytique","La comptabilité budgétaire"],2,"La comptabilité analytique (prix de revient, coût et rendement des services) n'est pas encore tenue.",10],
+["CP","La comptabilité administrative est tenue par :",["Le comptable public","L'ordonnateur","La Cour des comptes","Le contrôleur de l'État"],1,"L'ordonnateur tient la comptabilité administrative ; le comptable public tient la comptabilité générale.",11],
+["CP","Quels sont les deux principes fondamentaux de la comptabilité publique ?",["Annualité et unité","Séparation des fonctions d'ordonnateur et de comptable, et incompatibilité des fonctions","Universalité et spécialité","Sincérité et transparence"],1,"Ces deux principes permettent la division du travail, l'organisation du contrôle, la spécialisation des agents et la délimitation des responsabilités.",13],
+["CP","Pourquoi interdit-on le cumul des fonctions d'ordonnateur et de comptable ?",["Pour réduire le nombre de fonctionnaires","Parce que ce cumul ouvrirait la voie à la manipulation des deniers publics","Pour accélérer les paiements","Parce que la Constitution l'impose expressément"],1,"La séparation permet à chacun des deux agents de contrôler l'autre.",14],
+["CP","Laquelle de ces situations est une dérogation où le comptable exerce une fonction de l'ordonnateur ?",["Les régies de recettes","Les régies de dépenses","L'encaissement des droits au comptant","Le visa du contrôleur de l'État"],2,"Le comptable exerce des fonctions d'ordonnateur pour l'encaissement des droits au comptant et les dépenses sans ordonnancement préalable. Les régies, elles, sont la dérogation inverse.",15],
+["CP","Les régies de recettes et de dépenses constituent une dérogation au principe de séparation dans laquelle :",["Le comptable exerce des fonctions de l'ordonnateur","Des agents dépendant des ordonnateurs exercent des fonctions de comptables","La Cour des comptes exécute les dépenses","Le Parlement ordonne les paiements"],1,"C'est la deuxième sorte de dérogation au principe de séparation.",15],
+["CP","Est ordonnateur public toute personne ayant qualité pour :",["Manier les fonds et valeurs de l'organisme public","Engager, constater, liquider ou ordonner le recouvrement d'une créance ou le paiement d'une dette","Certifier les comptes de l'État","Voter les crédits budgétaires"],1,"Définition de l'ordonnateur des recettes et des dépenses.",17],
+["CP","L'ordonnateur principal peut être :",["Un ordonnateur de droit ou un ordonnateur désigné","Uniquement un comptable du Trésor","Un sous-ordonnateur","Un régisseur"],0,"L'ordonnateur principal est de droit ou désigné ; il peut déléguer sa signature à des ordonnateurs délégués et se faire assister de sous-ordonnateurs.",18],
+["CP","Est comptable de fait toute personne qui :",["Est nommée comptable par arrêté du ministre des Finances","Effectue, sans titre légal, des opérations de recettes, de dépenses ou de maniement de valeurs d'un organisme public","Tient la comptabilité administrative","Exerce les fonctions de régisseur suppléant"],1,"Sans préjudice des poursuites pénales applicables.",21],
+["CP","Lequel de ces agents ne figure PAS parmi les catégories de comptables publics présentées ?",["Les comptables du Trésor","Les receveurs","L'agent comptable central des représentations diplomatiques","Les ordonnateurs délégués"],3,"Les ordonnateurs délégués sont des ordonnateurs, pas des comptables.",20],
+["CP","La condition de fond de l'exécution des recettes publiques est :",["L'autorisation annuelle donnée par la loi de finances","L'existence d'une créance publique","Le visa du contrôleur de l'État","La signature du ministre des Finances"],1,"Condition de fond (droit fiscal ou administratif) : existence de créances publiques. Condition de forme (droit budgétaire) : autorisation annuelle de la loi de finances.",23],
+["CP","Dans la procédure de recette, quelle étape relève du comptable public ?",["La constatation","La liquidation des droits","L'ordre de recette","Le recouvrement"],3,"Constatation, liquidation et ordre de recette sont des opérations administratives de l'ordonnateur ; le recouvrement est une opération financière du comptable.",24],
+["CP","En matière de recettes, la constatation est :",["L'émission du titre de recette","L'acte par lequel est consacré le droit du créancier public","La détermination du montant exact de la dette du débiteur","L'encaissement des fonds"],1,"La liquidation détermine le montant ; l'ordre de recette est l'émission du titre ; le recouvrement est l'encaissement.",25],
+["CP","Quel est l'ordre chronologique des étapes de la dépense publique ?",["Liquidation – Engagement – Ordonnancement – Paiement","Engagement – Liquidation – Ordonnancement – Paiement","Engagement – Ordonnancement – Liquidation – Paiement","Ordonnancement – Engagement – Liquidation – Paiement"],1,"Les trois premières étapes relèvent de l'ordonnateur ; le contrôle et le paiement relèvent du comptable.",28],
+["CP","L'acte par lequel est constatée la naissance de la dette est :",["L'engagement","La liquidation","L'ordonnancement","Le paiement"],0,"L'engagement constate la naissance de la dette.",29],
+["CP","L'acte qui consiste à constater que la dette est à la charge de l'État, en arrêter le montant et en vérifier l'exigibilité est :",["L'engagement","La liquidation","L'ordonnancement","Le paiement"],1,"C'est la liquidation.",29],
+["CP","L'ordonnancement est :",["L'acte qui donne l'ordre de payer la dépense par l'émission d'ordres de paiement ou de mandats","Le règlement effectif au créancier","Le blocage des crédits","Le contrôle de la régularité de la dépense par le comptable"],0,"Les ordres de paiement ou mandats sont accompagnés des pièces justificatives.",29],
+["CP","La condition de forme de l'exécution des dépenses publiques est :",["L'existence d'une dette publique","L'autorisation budgétaire : la dépense doit être prévue et autorisée par la loi de finances","L'accord du créancier","Le visa de la Cour des comptes"],1,"Condition de fond : existence d'une dette publique à la charge de l'organisme.",27],
+["CP","La régie de dépenses permet de payer des dépenses :",["De montant élevé soumises à marché public","De faible montant, imprévues, urgentes ou non soumises à la procédure normale","Uniquement de personnel titulaire","D'investissement pluriannuel"],1,"Des avances de fonds sont mises à disposition du régisseur pour simplifier et accélérer le paiement.",32],
+["CP","Laquelle de ces dépenses peut être payée par une régie de dépenses ?",["Un marché de travaux","Les indemnités de déplacement et de mission","Le remboursement de la dette publique","L'acquisition d'un immeuble"],1,"Exemples : indemnités de déplacement et de mission ou heures supplémentaires, salaires des journaliers, frais de transport et de stockage, frais de secours.",33],
+["CP","La régie est créée par :",["Décision de l'ordonnateur","Arrêté conjoint du ministre concerné et du ministre des Finances","Décret du Chef du Gouvernement","Loi de finances"],1,"L'acte de création fixe la nature des dépenses, l'imputation budgétaire, le plafond de la régie et le comptable chargé du visa.",35],
+["CP","Lequel de ces éléments n'est PAS fixé par l'acte de création de la régie ?",["La nature des dépenses pouvant être payées","Le plafond de la régie","Le comptable chargé du visa de la dépense","Le nom du créancier de chaque dépense"],3,"L'acte fixe la nature des dépenses, l'imputation budgétaire, le plafond et le comptable chargé du visa.",35],
+["CP","Le régisseur et son suppléant sont nommés par :",["Arrêté du ministre des Finances","Décision de l'ordonnateur, après agrément du trésorier payeur et visa du contrôleur de l'État","Le Trésorier Général du Royaume seul","La Cour des comptes"],1,"Sauf dispositions légales contraires. Le régisseur est choisi parmi les fonctionnaires titulaires.",36],
+["CP","La responsabilité du régisseur est :",["Uniquement disciplinaire","Personnelle et pécuniaire","Collective avec l'ordonnateur","Inexistante si la dépense est visée"],1,"Il répond de tous les paiements effectués et des contrôles qu'il doit faire avant paiement (validité et régularité des pièces).",37],
+["CP","Le contrôle financier du régisseur est exercé par :",["L'ordonnateur","Le comptable public","Le Parlement","Le régisseur suppléant"],1,"L'ordonnateur exerce un contrôle administratif ; le comptable public un contrôle financier.",38],
+["CP","Quelle est la première étape du fonctionnement d'une régie de dépenses ?",["L'approvisionnement de la caisse","Le blocage des crédits","Le paiement des dépenses","La justification des dépenses"],1,"Blocage des crédits → demande d'autorisation de paiement → approvisionnement de la caisse → paiement → pièces justificatives → justification.",34],
+["CP","Le décret n° 2-07-1235 est relatif :",["Aux marchés publics","Au contrôle des dépenses de l'État","À la comptabilité des collectivités territoriales","Au code de recouvrement des créances publiques"],1,"Décret n° 2-07-1235 relatif au contrôle des dépenses de l'État (CMD).",39]
+];
+
+const L="ABCD";
+const $=id=>document.getElementById(id);
+let perm={}, ids=[], ans={}, done=false, t0=0, tick=null, errOnly=false;
+
+["all","FP","CP"].forEach(m=>document.querySelectorAll(`[data-c="${m}"]`).forEach(e=>e.textContent=Q.filter(q=>m==="all"||q[0]===m).length));
+try{ $("name").value=localStorage.getItem("qcm-name")||""; }catch(e){}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+$("go").onclick=()=>{
+  const mod=document.querySelector('input[name=mod]:checked').value;
+  try{ localStorage.setItem("qcm-name",$("name").value.trim()); }catch(e){}
+  ids=Q.map((_,i)=>i).filter(i=>mod==="all"||Q[i][0]===mod);
+  if($("mix").checked) shuffle(ids);
+  perm={}; ids.forEach(i=>perm[i]=shuffle(Q[i][2].map((_,k)=>k)));
+  ans={}; done=false; errOnly=false;
+  $("start").classList.add("hidden"); $("result").classList.remove("show");
+  $("bar").classList.remove("hidden"); $("submitBox").classList.remove("hidden");
+  t0=Date.now(); clearInterval(tick); tick=setInterval(clock,1000); clock();
+  render(); window.scrollTo({top:0});
+};
+
+function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+function clock(){ $("time").textContent=fmt(Date.now()-t0); }
+
+function render(){
+  const list=$("list"); list.innerHTML="";
+  ids.forEach((i,n)=>{
+    const [m,q,opts,c,e,s]=Q[i];
+    const a=ans[i];
+    if(done && errOnly && a===c) return;
+    const d=document.createElement("article"); d.className="q"; d.dataset.i=i;
+    d.innerHTML=`<div class="meta"><span>Question ${n+1}</span><span class="tag">${m==="FP"?"Finance publique":"Comptabilité publique"}</span></div><h3></h3><div class="opts"></div>`;
+    d.querySelector("h3").textContent=q;
+    const box=d.querySelector(".opts");
+    perm[i].forEach((k,pos)=>{ const o=opts[k];
+      const b=document.createElement("button"); b.type="button"; b.className="opt";
+      b.innerHTML=`<span class="l">${L[pos]}</span><span></span>`; b.lastChild.textContent=o;
+      if(!done){ if(a===k) b.classList.add("sel"); b.onclick=()=>pick(i,k,d); }
+      else{ b.disabled=true; if(k===c) b.classList.add("ok"); else if(k===a) b.classList.add("ko"); }
+      box.appendChild(b);
+    });
+    if(done){
+      const x=document.createElement("div"); x.className="exp"; x.style.display="block";
+      const v = a===undefined ? '<span class="verdict kov">Sans réponse.</span>' : a===c ? '<span class="verdict okv">Bonne réponse.</span>' : '<span class="verdict kov">Réponse incorrecte.</span>';
+      x.innerHTML=`${v} <b>Réponse ${L[perm[i].indexOf(c)]} : </b><span class="ans"></span>.  <span></span> <em style="color:var(--muted)">(Support ${m==="FP"?"Finance publique":"Comptabilité publique"}, diapo ${s})</em>`;
+      x.querySelector(".ans").textContent=opts[c]; x.querySelector("span:not(.verdict):not(.ans)").textContent=e;
+      d.appendChild(x);
+    }
+    list.appendChild(d);
+  });
+  progress();
+}
+
+function pick(i,k,d){
+  ans[i]=k; d.classList.remove("missing");
+  d.querySelectorAll(".opt").forEach((b,pos)=>b.classList.toggle("sel",perm[i][pos]===k));
+  progress();
+}
+
+function progress(){
+  const tot=ids.length, n=ids.filter(i=>ans[i]!==undefined).length;
+  $("sTot").textContent=tot; $("sAns").textContent=n;
+  if(!done){ $("mG").style.width=(n/tot*100)+"%"; $("mG").style.background="var(--brand)"; $("mR").style.width="0"; }
+}
+
+function ask(){
+  const miss=ids.filter(i=>ans[i]===undefined).length;
+  $("mTxt").textContent = miss ? `Il vous reste ${miss} question(s) sans réponse. Elles seront comptées comme fausses. Une fois validée, l'épreuve ne peut plus être modifiée.` : "Toutes les questions ont une réponse. Une fois validée, l'épreuve ne peut plus être modifiée.";
+  $("modal").classList.add("show");
+}
+$("submit").onclick=ask; $("submitTop").onclick=ask;
+$("mNo").onclick=()=>{
+  $("modal").classList.remove("show");
+  const first=document.querySelector(".q:not(:has(.opt.sel))");
+  document.querySelectorAll(".q").forEach(q=>{ if(ans[q.dataset.i]===undefined) q.classList.add("missing"); });
+  if(first) first.scrollIntoView({behavior:"smooth",block:"center"});
+};
+$("mYes").onclick=()=>{ $("modal").classList.remove("show"); finish(); };
+
+function finish(){
+  done=true; clearInterval(tick);
+  const tot=ids.length, ok=ids.filter(i=>ans[i]===Q[i][3]).length;
+  const blank=ids.filter(i=>ans[i]===undefined).length, ko=tot-ok-blank;
+  const note=(ok/tot*20);
+  $("rWho").textContent=($("name").value.trim()||"Candidat") + " — résultat";
+  $("rBig").textContent=note.toFixed(2).replace(".",",")+" / 20";
+  $("rTxt").textContent= note>=16?"Excellent niveau, vous êtes prêt(e).": note>=10?"Bon travail. Revoyez les diapos indiquées dans le corrigé pour vos erreurs.":"À retravailler : relisez les supports, puis repassez l'épreuve.";
+  const parts=["FP","CP"].map(m=>{const s=ids.filter(i=>Q[i][0]===m); if(!s.length) return ""; const o=s.filter(i=>ans[i]===Q[i][3]).length; return `<span><b>${o}/${s.length}</b>${m==="FP"?"Finance publique":"Comptabilité publique"}</span>`;}).join("");
+  $("rStats").innerHTML=`<span><b>${ok}</b>bonnes</span><span><b>${ko}</b>fausses</span><span><b>${blank}</b>sans réponse</span>${parts}<span><b>${fmt(Date.now()-t0)}</b>durée</span>`;
+  $("mG").style.background=""; $("mG").style.width=(ok/tot*100)+"%"; $("mR").style.width=((tot-ok)/tot*100)+"%";
+  $("result").classList.add("show"); $("submitBox").classList.add("hidden"); $("submitTop").classList.add("hidden");
+  $("onlyErr").textContent="Voir seulement mes erreurs"; errOnly=false;
+  render(); window.scrollTo({top:0,behavior:"smooth"});
+}
+$("onlyErr").onclick=()=>{ errOnly=!errOnly; $("onlyErr").textContent=errOnly?"Voir tout le corrigé":"Voir seulement mes erreurs"; render(); };
+$("again").onclick=()=>{
+  done=false; $("result").classList.remove("show"); $("bar").classList.add("hidden");
+  $("submitTop").classList.remove("hidden"); $("list").innerHTML=""; $("start").classList.remove("hidden");
+  window.scrollTo({top:0});
+};
+</script>
+</body>
+</html>
